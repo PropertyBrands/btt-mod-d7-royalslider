@@ -1,0 +1,209 @@
+<?php
+function royalslider_field_formatter_info() {
+  return array(
+    'royalslider' => array(
+      'label' => t('Royal Slider'),
+      'field types' => array('image'),
+      'settings' => array(
+        'limit' => '',
+        'limit_link' => TRUE,
+        'fullscreen' => array(
+          'formatter' => 'image',
+          'image' => array(
+            'settings' => array(
+              'image_style' => ''    
+            )    
+          )
+        ),
+        'slides' => array(
+          'formatter' => 'image',
+          'image' => array(
+            'settings' => array(
+              'image_style' => 'large'    
+            )    
+          )
+        ),
+        'controls' => array(
+          'formatter' => 'image',
+          'image' => array(
+            'settings' => array(
+              'image_style' => 'thumbnail'    
+            )    
+          )
+        ),   
+      )
+    ),
+  );
+}
+
+function royalslider_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $formatters = field_ui_formatter_options($field['type']);
+  $form = array();
+  $form['#tree'] = TRUE;
+  $form['limit'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Limit'),
+    '#description' => t('Enter a number here to set a maximum number of slides to be displayed.  Otherwise all items in the field will be used.'),
+    '#size' => 3,
+    '#default_value' => $settings['limit'],
+  );
+  $form['limit_link'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show Count Link'),
+    '#description' => t('Show a count of total images linked to the full display when the limit is exceeded.'),
+    '#default_value' => $settings['limit_link'],
+  );
+  $form['fullscreen'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Full Screen'),
+    'formatter' => array(
+      '#type' => 'select',
+      '#title' => t('Full Screen Formatter'),
+      '#attributes' => array(
+        'class' => array('royalslider-fullscreen-formatter')    
+      ),
+      '#default_value' => $settings['fullscreen']['formatter']
+    ),
+    '#options' => array()
+  );
+  $form['slides'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Slides'),
+    'formatter' => array(
+      '#type' => 'select',
+      '#title' => t('Slides Formatter'),
+      '#attributes' => array(
+        'class' => array('royalslider-slides-formatter')    
+      ),
+      '#default_value' => $settings['slides']['formatter']
+    ),
+    '#options' => array()
+  );
+  $form['controls'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Controls'),
+    'formatter' => array(
+      '#type' => 'select',
+      '#title' => t('Controls Formatter'),
+      '#attributes' => array(
+        'class' => array('royalslider-controls-formatter')    
+      ),
+      '#default_value' => $settings['controls']['formatter']
+    ),
+    '#options' => array()
+  );
+  foreach($formatters as $type => $name) {
+    if($type != 'image') continue;
+    $formatter_opts[$type] = $name;
+    $formatter = field_info_formatter_types($type);
+    $settings_form = array();
+    $function = $formatter['module'] . '_field_formatter_settings_form';
+    if (function_exists($function)) {
+      $this_instance = $instance;
+      $this_instance['display'][$view_mode]['settings'] = $settings['fullscreen'][$type]['settings'];
+      $form['fullscreen'][$type] = array(
+        '#type' => 'fieldset',
+        '#title' => t('@formatter Settings', array('@formatter' => $name))  
+      );
+      $form['fullscreen'][$type]['settings'] = $function($field, $this_instance, $view_mode, array(), $form_state);
+      $form['fullscreen'][$type]['#states'] = array(
+        'visible' => array(
+        	'.rcd-flexslider-fullscreen-formatter' => array('value' => $type)
+        )
+      );
+      $this_instance['display'][$view_mode]['settings'] = $settings['slides'][$type]['settings'];
+      $form['slides'][$type] = array(
+        '#type' => 'fieldset',
+        '#title' => t('@formatter Settings', array('@formatter' => $name))  
+      );
+      $form['slides'][$type]['settings'] = $function($field, $this_instance, $view_mode, array(), $form_state);
+      $form['slides'][$type]['#states'] = array(
+        'visible' => array(
+        	'.royalslider-slides-formatter' => array('value' => $type)
+        )
+      );
+      $this_instance['display'][$view_mode]['settings'] = $settings['controls'][$type]['settings'];
+      
+      $form['controls'][$type] = array(
+        '#type' => 'fieldset',
+        '#title' => t('@formatter Settings', array('@formatter' => $name))  
+      );
+      $form['controls'][$type]['settings'] = $function($field, $this_instance, $view_mode, array(), $form_state);
+      $form['controls'][$type]['#states'] = array(
+        'visible' => array(
+        	'.royalslider-controls-formatter' => array('value' => $type)
+        )
+      );
+    }
+  }
+  $form['fullscreen']['formatter']['#options'] = array('' => t('None')) + $formatter_opts;
+  $form['slides']['formatter']['#options'] = $formatter_opts;
+  $form['controls']['formatter']['#options'] = array('' => t('None')) + $formatter_opts;
+  dpm($form);
+  return $form;
+}
+
+function royalslider_field_formatter_settings_summary($field, $instance, $view_mode) {
+  return t('Royal Slider');
+}
+
+function royalslider_theme($existing, $type, $theme, $path) {
+  return array(
+    'royalslider_formatter' => array(
+      'render element' => 'element',
+      'path' => $path . '/theme',
+      'template' => 'royalslider-formatter',
+      'file' => 'royalslider.theme.inc'
+    )
+  );
+}
+
+function royalslider_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $settings = $display['settings'];
+  if(!count($items)) return array();
+  $settings['items_total'] = count($items);
+  $element = array(
+    '#theme' => 'royalslider_formatter',
+    '#settings' => $settings,
+  );
+  if($settings['limit']) {
+    $items = array_shift(array_chunk($items, $settings['limit']));
+  }
+  if($settings['fullscreen']['formatter']) {
+    $formatter = field_info_formatter_types($settings['fullscreen']['formatter']);
+    $function = $formatter['module'] . "_field_formatter_view";
+    if(function_exists($function)) {
+      $formatter_display = $display;
+      $formatter_display['settings'] = $settings['fullscreen'][$settings['fullscreen']['formatter']]['settings'];
+      $formatter_display['type'] = $settings['fullscreen']['formatter'];
+      $formatter_display['module'] = $formatter['module'];
+      $element['fullscreen'] = $function($entity_type, $entity, $field, $instance, $langcode, $items, $formatter_display);
+    }
+  }
+  if($settings['slides']['formatter']) {
+    $formatter = field_info_formatter_types($settings['slides']['formatter']);
+    $function = $formatter['module'] . "_field_formatter_view";
+    if(function_exists($function)) {
+      $formatter_display = $display;
+      $formatter_display['settings'] = $settings['slides'][$settings['slides']['formatter']]['settings'];
+      $formatter_display['type'] = $settings['slides']['formatter'];
+      $formatter_display['module'] = $formatter['module'];
+      $element['slides'] = $function($entity_type, $entity, $field, $instance, $langcode, $items, $formatter_display);
+    }
+  }
+  if($settings['controls']['formatter'] && count($items) > 1) {
+    $formatter = field_info_formatter_types($settings['controls']['formatter']);
+    $function = $formatter['module'] . "_field_formatter_view";
+    if(function_exists($function)) {
+      $formatter_display = $display;
+      $formatter_display['settings'] = $settings['controls'][$settings['controls']['formatter']]['settings'];
+      $formatter_display['type'] = $settings['controls']['formatter'];
+      $formatter_display['module'] = $formatter['module'];
+      $element['controls'] = $function($entity_type, $entity, $field, $instance, $langcode, $items, $formatter_display);
+    }
+  }
+  
+  return $element;
+}
