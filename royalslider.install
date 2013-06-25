@@ -1,0 +1,19 @@
+<?php
+/**
+ * Implements hook_requirements().  Checks for the Royal Slider library.
+ */
+function royalslider_requirements($phase) {
+  $requirements = array();
+  // Check for Royal Slider library
+  if ($phase == 'runtime') {
+    if(!file_exists(libraries_get_path('royalslider') . "/jquery.royalslider.min.js")) {
+      $requirements['royalslider_library'] = array(
+        'description' => t('The <a href="@url">Royal Slider library</a> should be installed at [libraries-path]/royalslider.', array('@url' => 'http://dimsemenov.com/plugins/royal-slider/')),
+        'severity' => REQUIREMENT_ERROR,
+        'value' => t('Not installed.'),
+        'title' => t('Royal Slider')
+      );
+    }
+  }
+  return $requirements;
+}
