@@ -17,12 +17,22 @@ foreach($element['slides'] as $ind => $slide) {
     'height' => $slide['#item']['height'],
   );
   image_style_transform_dimensions($slide['#image_style'], $dimensions);
-  
-  $path = $slide['#image_style'] ? image_style_url($slide['#image_style'], $slide['#item']['uri']) : file_create_url($slide['#item']['uri']);
+
+  if ($slide['#image_style']) {
+    $path = file_is_scheme_remote($uri)
+      ? remote_stream_wrapper_image_style_path($style_name, $uri)
+      : image_style_url($slide['#image_style'], $slide['#item']['uri']);
+  }
+  else {
+    $path = file_create_url($slide['#item']['uri']);
+  }
+
   $attributes['data-rsw'] = $dimensions['width'];
   $attributes['data-rsh'] = $dimensions['height'];
   if(isset($element['fullscreen'][$ind])) {
-    $attributes['data-rsbigimg'] = $element['fullscreen'][$ind]['#image_style'] ? image_style_url($element['fullscreen'][$ind]['#image_style'], $element['fullscreen'][$ind]['#item']['uri']) : file_create_url($element['fullscreen'][$ind]['#item']['uri']);
+    $attributes['data-rsbigimg'] = $element['fullscreen'][$ind]['#image_style']
+      ? image_style_url($element['fullscreen'][$ind]['#image_style'], $element['fullscreen'][$ind]['#item']['uri'])
+      : file_create_url($element['fullscreen'][$ind]['#item']['uri']);
   }
   $content = $slide['#item']['title'];
   if(isset($element['controls'][$ind])) {
