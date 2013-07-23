@@ -19,8 +19,8 @@ foreach($element['slides'] as $ind => $slide) {
   image_style_transform_dimensions($slide['#image_style'], $dimensions);
 
   if ($slide['#image_style']) {
-    $path = file_is_scheme_remote($uri)
-      ? remote_stream_wrapper_image_style_path($style_name, $uri)
+    $path = file_is_scheme_remote(file_uri_scheme($slide['#item']['uri']))
+      ? remote_stream_wrapper_image_style_path($style_name, $slide['#item']['uri'])
       : image_style_url($slide['#image_style'], $slide['#item']['uri']);
   }
   else {
