@@ -20,7 +20,7 @@ foreach($element['slides'] as $ind => $slide) {
 
   if ($slide['#image_style']) {
     $path = file_is_scheme_remote(file_uri_scheme($slide['#item']['uri']))
-      ? remote_stream_wrapper_image_style_path($style_name, $slide['#item']['uri'])
+      ? remote_stream_wrapper_image_style_path($slide['#image_style'], $slide['#item']['uri'])
       : image_style_url($slide['#image_style'], $slide['#item']['uri']);
   }
   else {
