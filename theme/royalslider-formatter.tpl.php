@@ -23,9 +23,8 @@ foreach($element['slides'] as $ind => $slide) {
       ? remote_stream_wrapper_image_style_path($slide['#image_style'], $slide['#item']['uri'])
       : image_style_url($slide['#image_style'], $slide['#item']['uri']);
   }
-  else {
-    $path = file_create_url($slide['#item']['uri']);
-  }
+
+  $path = file_create_url($slide['#item']['uri']);
 
   $attributes['data-rsw'] = $dimensions['width'];
   $attributes['data-rsh'] = $dimensions['height'];
