@@ -7,6 +7,8 @@ function royalslider_field_formatter_info() {
       'settings' => array(
         'limit' => '',
         'limit_link' => TRUE,
+        'slideshow_height' => '662',
+        'thumb_orientation' => 'horizontal',
         'fullscreen' => array(
           'formatter' => 'image',
           'image' => array(
@@ -54,6 +56,23 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
     '#title' => t('Show Count Link'),
     '#description' => t('Show a count of total images linked to the full display when the limit is exceeded.'),
     '#default_value' => $settings['limit_link'],
+  );
+  $form['slideshow_height'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Slideshow Base Height'),
+    '#description' => t('Enter the height of the slideshow. For horizontal thumbs, it is the height of the image plus the height of the thumbnails.<br>For vertical thumbs, it is the height of the image, minus the height of the thumbs. <br>The default thumbnail height is 72px.)'),
+    '#size' => 5,
+    '#default_value' => $settings['slideshow_height']
+  );
+  $form['thumb_orientation'] = array(
+    '#type'           => 'select',                          
+    '#title'          => t('Thumbnail Orientation'),                  
+    '#description'    => t('Select thumbnail orientation.'), 
+    '#default_value'  => $settings['thumb_orientation'],              
+    '#options'        => array(
+      'horizontal'  => 'Horizontal',
+      'vertical' => 'Vertical',
+    ),
   );
   $form['fullscreen'] = array(
     '#type' => 'fieldset',

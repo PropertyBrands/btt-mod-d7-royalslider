@@ -49,10 +49,6 @@ if(isset($element['#settings']['limit_link']) && $element['#settings']['limit_li
 }
 $output = '<div id="' . $container_id .'" class="' . $variables['classes'] . '"' . $variables['attributes'] . ' style="width:100%;">' . $output . '</div>' . $link;
 
-//Calculate the full height of the slideshow
-//72px is the default height of the thumbnails
-$rsheight = $dimensions['height']+72;
-
 drupal_add_css(libraries_get_path('royalslider') . "/skins/default/rs-default.css");
 
 drupal_add_js("jQuery(document).ready(function($) {
@@ -64,7 +60,7 @@ drupal_add_js("jQuery(document).ready(function($) {
     controlNavigation: 'thumbnails',
     autoScaleSlider: true,
     autoScaleSliderWidth: {$dimensions['width']},
-    autoScaleSliderHeight: {$rsheight},
+    autoScaleSliderHeight: " . (isset($element['#settings']['slideshow_height']) ? $element['#settings']['slideshow_height'] : 662) . ",
     loop: false,
     imageScaleMode: 'fit-if-smaller',
     imageScalePadding: 0,
@@ -79,12 +75,12 @@ drupal_add_js("jQuery(document).ready(function($) {
     globalCaption: true,
     globalCaptionInside: false,
     thumbs: {
+      orientation: '" . (isset($element['#settings']['thumb_orientation']) ? $element['#settings']['thumb_orientation'] : 'horizontal') . "',
       appendSpan: true,
-      firstMargin: false,
       paddingBottom: 0,
-      spacing: 8
+      firstMargin: false
     }
   });
 });", "inline");
 
-print($output);
+print($output)
