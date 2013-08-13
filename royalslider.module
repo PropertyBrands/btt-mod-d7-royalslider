@@ -42,6 +42,16 @@ function royalslider_libraries_info() {
 }
 
 /**
+ * Implements hook_libraries_info_alter().
+ */
+function royalslider_libraries_info_alter(&$libraries) {
+  // Add support for jQuery Easing module
+  if (module_exists('jqeasing')) {
+    $libraries['flexslider']['dependencies'][] = 'easing (>=1.3)';
+  }
+}
+
+/**
  * Implements hook_library().
  *
  * We also define RoyalSlider through the core library callbacks
@@ -83,6 +93,46 @@ function royalslider_help($path, $arg) {
   }
 }
 
+
+/**
+ * List of all easing methods available from jQuery Easing v1.3
+ */
+function _royalslider_jqeasing_options() {
+  return array(
+    "jswing" => "jswing",
+    "def" => "def",
+    "easeInQuad" => "easeInQuad",
+    "easeOutQuad" => "easeOutQuad",
+    "easeInOutQuad" => "easeInOutQuad",
+    "easeInCubic" => "easeInCubic",
+    "easeOutCubic" => "easeOutCubic",
+    "easeInOutCubic" => "easeInOutCubic",
+    "easeInQuart" => "easeInQuart",
+    "easeOutQuart" => "easeOutQuart",
+    "easeInOutQuart" => "easeInOutQuart",
+    "easeInQuint" => "easeInQuint",
+    "easeOutQuint" => "easeOutQuint",
+    "easeInOutQuint" => "easeInOutQuint",
+    "easeInSine" => "easeInSine",
+    "easeOutSine" => "easeOutSine",
+    "easeInOutSine" => "easeInOutSine",
+    "easeInExpo" => "easeInExpo",
+    "easeOutExpo" => "easeOutExpo",
+    "easeInOutExpo" => "easeInOutExpo",
+    "easeInCirc" => "easeInCirc",
+    "easeOutCirc" => "easeOutCirc",
+    "easeInOutCirc" => "easeInOutCirc",
+    "easeInElastic" => "easeInElastic",
+    "easeOutElastic" => "easeOutElastic",
+    "easeInOutElastic" => "easeInOutElastic",
+    "easeInBack" => "easeInBack",
+    "easeOutBack" => "easeOutBack",
+    "easeInOutBack" => "easeInOutBack",
+    "easeInBounce" => "easeInBounce",
+    "easeOutBounce" => "easeOutBounce",
+    "easeInOutBounce" => "easeInOutBounce",
+  );
+}
 
 
 
