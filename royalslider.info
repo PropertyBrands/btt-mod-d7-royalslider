@@ -5,3 +5,5 @@ description = "Provides a custom field formatter to utilize Royal Slider in conj
 
 dependencies[] = jquery_update
 dependencies[] = libraries (>=2.x)
+
+configure = admin/config/media/royalslider
