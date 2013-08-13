@@ -5,6 +5,17 @@
  */
 
 /**
+ * Implements hook_permission().
+ */
+function royalslider_permission() {
+  return array(
+    'administer royalslider' =>  array(
+      'title' => t('Administer the RoyalSlider module'),
+    ),
+  );
+}
+
+/**
  * Implements hook_libraries_info().
  */
 function royalslider_libraries_info() {
