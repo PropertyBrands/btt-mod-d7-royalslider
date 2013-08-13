@@ -68,6 +68,24 @@ function royalslider_library() {
   return $libraries;
 }
 
+/**
+ * Implements hook_help().
+ */
+function royalslider_help($path, $arg) {
+  switch ($path) {
+    case 'admin/config/media/royalslider/edit/%':
+      return
+        '<p>'
+        . t('An <em>option set</em> defines exactly how a royalslider image gallery looks like on your site. '
+        . 'It is s a combination of <a href="@styles">image styles</a> for the various image sizes and RoyalSlider library options.', array('@styles' => url('admin/config/media/image-styles'))) . '<br />'
+        . t('For a full documentation of all options, refer to the official @docs.', array('@docs' => l(t('RoyalSlider documentation'), 'http://dimsemenov.com/plugins/royal-slider/')))
+        . '</p>';
+  }
+}
+
+
+
+
 function royalslider_field_formatter_info() {
   return array(
     'royalslider' => array(
