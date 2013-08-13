@@ -1,4 +1,35 @@
 <?php
+/**
+ * @file
+ * RoyalSlider module.
+ */
+
+/**
+ * Implements hook_libraries_info().
+ */
+function royalslider_libraries_info() {
+  $libraries['royalslider'] = array(
+    'name' => 'RoyalSlider',
+    'vendor url' => 'http://dimsemenov.com/plugins/royal-slider/',
+    'download url' => 'http://dimsemenov.com/plugins/royal-slider/pricing/',
+    'version arguments' => array(
+      'file' => 'jquery.royalslider.min.js',
+      'pattern' => '/jquery.royalslider v(\d+\.+\d+\.+\d+)/',
+      'lines' => 1,
+    ),
+    'files' => array(
+      'js' => array(
+        'jquery.royalslider.min.js',
+      ),
+      'css' => array(
+        'royalslider.css',
+      ),
+    ),
+  );
+
+  return $libraries;
+}
+
 function royalslider_field_formatter_info() {
   return array(
     'royalslider' => array(
@@ -11,26 +42,26 @@ function royalslider_field_formatter_info() {
           'formatter' => 'image',
           'image' => array(
             'settings' => array(
-              'image_style' => ''    
-            )    
+              'image_style' => ''
+            )
           )
         ),
         'slides' => array(
           'formatter' => 'image',
           'image' => array(
             'settings' => array(
-              'image_style' => 'large'    
-            )    
+              'image_style' => 'large'
+            )
           )
         ),
         'controls' => array(
           'formatter' => 'image',
           'image' => array(
             'settings' => array(
-              'image_style' => 'thumbnail'    
-            )    
+              'image_style' => 'thumbnail'
+            )
           )
-        ),   
+        ),
       )
     ),
   );
@@ -62,7 +93,7 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
       '#type' => 'select',
       '#title' => t('Full Screen Formatter'),
       '#attributes' => array(
-        'class' => array('royalslider-fullscreen-formatter')    
+        'class' => array('royalslider-fullscreen-formatter')
       ),
       '#default_value' => $settings['fullscreen']['formatter']
     ),
@@ -75,7 +106,7 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
       '#type' => 'select',
       '#title' => t('Slides Formatter'),
       '#attributes' => array(
-        'class' => array('royalslider-slides-formatter')    
+        'class' => array('royalslider-slides-formatter')
       ),
       '#default_value' => $settings['slides']['formatter']
     ),
@@ -88,7 +119,7 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
       '#type' => 'select',
       '#title' => t('Controls Formatter'),
       '#attributes' => array(
-        'class' => array('royalslider-controls-formatter')    
+        'class' => array('royalslider-controls-formatter')
       ),
       '#default_value' => $settings['controls']['formatter']
     ),
@@ -105,7 +136,7 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
       $this_instance['display'][$view_mode]['settings'] = $settings['fullscreen'][$type]['settings'];
       $form['fullscreen'][$type] = array(
         '#type' => 'fieldset',
-        '#title' => t('@formatter Settings', array('@formatter' => $name))  
+        '#title' => t('@formatter Settings', array('@formatter' => $name))
       );
       $form['fullscreen'][$type]['settings'] = $function($field, $this_instance, $view_mode, array(), $form_state);
       $form['fullscreen'][$type]['#states'] = array(
@@ -116,7 +147,7 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
       $this_instance['display'][$view_mode]['settings'] = $settings['slides'][$type]['settings'];
       $form['slides'][$type] = array(
         '#type' => 'fieldset',
-        '#title' => t('@formatter Settings', array('@formatter' => $name))  
+        '#title' => t('@formatter Settings', array('@formatter' => $name))
       );
       $form['slides'][$type]['settings'] = $function($field, $this_instance, $view_mode, array(), $form_state);
       $form['slides'][$type]['#states'] = array(
@@ -125,10 +156,10 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
         )
       );
       $this_instance['display'][$view_mode]['settings'] = $settings['controls'][$type]['settings'];
-      
+
       $form['controls'][$type] = array(
         '#type' => 'fieldset',
-        '#title' => t('@formatter Settings', array('@formatter' => $name))  
+        '#title' => t('@formatter Settings', array('@formatter' => $name))
       );
       $form['controls'][$type]['settings'] = $function($field, $this_instance, $view_mode, array(), $form_state);
       $form['controls'][$type]['#states'] = array(
@@ -204,6 +235,6 @@ function royalslider_field_formatter_view($entity_type, $entity, $field, $instan
       $element['controls'] = $function($entity_type, $entity, $field, $instance, $langcode, $items, $formatter_display);
     }
   }
-  
+
   return $element;
 }
