@@ -30,6 +30,33 @@ function royalslider_libraries_info() {
   return $libraries;
 }
 
+/**
+ * Implements hook_library().
+ *
+ * We also define RoyalSlider through the core library callbacks
+ */
+function royalslider_library() {
+  $library_path = libraries_get_path('royalslider');
+
+  $libraries['royalslider'] = array(
+    'title' => 'RoyalSlider',
+    'website' => 'http://dimsemenov.com/plugins/royal-slider/',
+    'version' => '9.4.92',
+    'js' => array(
+      $library_path . '/jquery.royalslider.min.js' => array(
+        'scope' => 'footer',
+      ),
+    ),
+    'css' => array(
+      $library_path . '/royalslider.css' => array(
+        'type' => 'file',
+        'media' => 'screen',
+      ),
+    ),
+  );
+  return $libraries;
+}
+
 function royalslider_field_formatter_info() {
   return array(
     'royalslider' => array(
@@ -141,7 +168,7 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
       $form['fullscreen'][$type]['settings'] = $function($field, $this_instance, $view_mode, array(), $form_state);
       $form['fullscreen'][$type]['#states'] = array(
         'visible' => array(
-        	'.rcd-flexslider-fullscreen-formatter' => array('value' => $type)
+        	'.rcd-royalslider-fullscreen-formatter' => array('value' => $type)
         )
       );
       $this_instance['display'][$view_mode]['settings'] = $settings['slides'][$type]['settings'];
