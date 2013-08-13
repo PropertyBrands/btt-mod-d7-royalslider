@@ -17,3 +17,70 @@ function royalslider_requirements($phase) {
   }
   return $requirements;
 }
+
+
+/**
+ * Implements hook_schema().
+ */
+function royalslider_schema() {
+  $schema = array();
+
+  $schema['royalslider_optionset'] = array(
+    'description' => 'Store option sets for royalslider instances.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'preset',
+      'default hook' => 'royalslider_default_presets',
+      'api' => array(
+        'owner' => 'royalslider',
+        'api' => 'royalslider_default_preset',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'name' => array(
+        'description' => 'The machine-readable option set name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The human-readable title for this option set.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'theme' => array(
+        'description' => 'The royalslider theme.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'classic',
+      ),
+      'imagestyle_normal' => array(
+        'description' => 'The image style for normal images.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'royalslider_full',
+      ),
+      'imagestyle_thumbnail' => array(
+        'description' => 'The image style for thumbnail images.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'royalslider_thumbnail',
+      ),
+      'options' => array(
+        'description' => 'The options array.',
+        'type' => 'blob',
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+  return $schema;
+}
