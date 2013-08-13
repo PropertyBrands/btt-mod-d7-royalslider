@@ -4,4 +4,4 @@ version = 7.x-2.0-dev
 description = "Provides a custom field formatter to utilize Royal Slider in conjuntion with other formatters like colorbox and cs_adaptive_images.  Requires jQuery update to 1.7 and the licensed Royal Slider library."
 
 dependencies[] = jquery_update
-dependencies[] = libraries
+dependencies[] = libraries (>=2.x)
