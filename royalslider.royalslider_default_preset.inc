@@ -15,8 +15,6 @@ function royalslider_royalslider_default_presets() {
   $preset->api_version = 1;
   $preset->name = 'default';
   $preset->title = 'Default';
-  $preset->imagestyle_normal = 'royalslider_full';
-  $preset->imagestyle_thumbnail = 'royalslider_thumbnail';
   $presets['default'] = $preset;
 
   return $presets;

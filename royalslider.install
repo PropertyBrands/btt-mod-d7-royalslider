@@ -51,27 +51,6 @@ function royalslider_schema() {
         'length' => 255,
         'not null' => TRUE,
       ),
-      'theme' => array(
-        'description' => 'The royalslider theme.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 'classic',
-      ),
-      'imagestyle_normal' => array(
-        'description' => 'The image style for normal images.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 'royalslider_full',
-      ),
-      'imagestyle_thumbnail' => array(
-        'description' => 'The image style for thumbnail images.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 'royalslider_thumbnail',
-      ),
       'options' => array(
         'description' => 'The options array.',
         'type' => 'blob',
