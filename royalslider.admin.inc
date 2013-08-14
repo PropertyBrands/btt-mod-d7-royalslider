@@ -33,6 +33,43 @@ function royalslider_form_optionset_add_submit($form, &$form_state) {
 function royalslider_option_elements($options = array()) {
   $form = array();
 
+  // Load available image formatters.
+  module_load_include('inc', 'field_ui', 'field_ui.admin');
+  $formatters = field_ui_formatter_options('image');
+  // But not RoyalSlider, that would be inception.
+  unset($formatters['royalslider']);
+
+  // Full-screen settings.
+  $form['fullscreen'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Full Screen settings'),
+    // For whatever reason this isn't working properly here so let's just
+    // prefix all nested setting names.
+//    '#tree' => TRUE,
+  );
+
+  $fullscreen_formatter = isset($form_state['values']['fullscreen_formatter'])
+    ? $form_state['values']['fullscreen_formatter']
+    : '';
+
+  $form['fullscreen']['fullscreen_formatter'] = array(
+    '#type' => 'select',
+    '#title' => t('Full Screen Formatter'),
+    '#options' => array('' => t('None')) + $formatters,
+    '#default_value' => $fullscreen_formatter,
+    '#ajax' => array(
+      'callback' => 'royalslider_ajax_fullscreen_formatter',
+      'wrapper' => 'fullscreen-formatter-settings',
+      'method' => 'replace',
+      'effect' => 'fade',
+    ),
+  );
+
+  $form['fullscreen']['formatter_settings'] = array(
+    '#prefix' => '<div id="fullscreen-formatter-settings">',
+    '#suffix' => '</div>',
+  );
+
   // General Slideshow and Animiation Settings
   $form['animation_slideshow'] = array(
     '#type' => 'fieldset',
@@ -66,6 +103,34 @@ function royalslider_option_elements($options = array()) {
   );
 
   return $form;
+}
+
+/**
+ * Selects just the second dropdown to be returned for re-rendering
+ *
+ * Since the controlling logic for populating the form is in the form builder
+ * function, all we do here is select the element and return it to be updated.
+ *
+ * @return renderable array
+ */
+function royalslider_ajax_fullscreen_formatter($form, $form_state) {
+  $response = '';
+  $fullscreen_formatter = isset($form_state['values']['fullscreen_formatter'])
+    ? $form_state['values']['fullscreen_formatter']
+    : '';
+
+  if (!empty($fullscreen_formatter)) {
+    if ($formatter = field_info_formatter_types($fullscreen_formatter)) {
+      $function = $formatter['module'] . '_field_formatter_settings_form';
+
+      if (function_exists($function)) {
+        $new_form = call_user_func($function, NULL);
+        dfb($new_form);
+      }
+    }
+  }
+
+  return $response;
 }
 
 /**
