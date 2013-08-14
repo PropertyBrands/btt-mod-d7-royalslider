@@ -468,7 +468,6 @@ function royalslider_field_formatter_settings_form($field, $instance, $view_mode
   $form['fullscreen']['formatter']['#options'] = array('' => t('None')) + $formatter_opts;
   $form['slides']['formatter']['#options'] = $formatter_opts;
   $form['controls']['formatter']['#options'] = array('' => t('None')) + $formatter_opts;
-  dpm($form);
   return $form;
 }
 
