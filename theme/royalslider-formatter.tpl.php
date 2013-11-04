@@ -18,13 +18,13 @@ foreach($element['slides'] as $ind => $slide) {
   );
   image_style_transform_dimensions($slide['#image_style'], $dimensions);
 
+  $path = file_create_url($slide['#item']['uri']);
+
   if ($slide['#image_style']) {
     $path = file_is_scheme_remote(file_uri_scheme($slide['#item']['uri']))
       ? remote_stream_wrapper_image_style_path($slide['#image_style'], $slide['#item']['uri'])
       : image_style_url($slide['#image_style'], $slide['#item']['uri']);
   }
-
-  $path = file_create_url($slide['#item']['uri']);
 
   $attributes['data-rsw'] = $dimensions['width'];
   $attributes['data-rsh'] = $dimensions['height'];
